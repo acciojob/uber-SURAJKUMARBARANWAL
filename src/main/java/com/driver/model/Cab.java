@@ -11,19 +11,13 @@ public class Cab{
     private int perKmRate;
     private boolean available;
 
+
     //FK FOR DRIVER
     @OneToOne
     @JoinColumn
     private Driver driver;
 
     public Cab() {
-    }
-
-    public Cab(int id, int perKmRate, boolean available, Driver driver) {
-        this.id = id;
-        this.perKmRate = perKmRate;
-        this.available = available;
-        this.driver = driver;
     }
 
     public int getId() {
@@ -42,7 +36,7 @@ public class Cab{
         this.perKmRate = perKmRate;
     }
 
-    public boolean isAvailable() {
+    public boolean getAvailable() {
         return available;
     }
 

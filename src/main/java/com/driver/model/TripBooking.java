@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class TripBooking{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int trimBookingId;
+    private int tripBookingId;
     private String fromLocation;
     private String toLocation;
     private int distanceInKm;
@@ -25,23 +25,14 @@ public class TripBooking{
     public TripBooking() {
     }
 
-    public TripBooking(int trimBookingId, String fromLocation, String toLocation, int distanceInKm, TripStatus status, int bill, Customer customer, Driver driver) {
-        this.trimBookingId = trimBookingId;
-        this.fromLocation = fromLocation;
-        this.toLocation = toLocation;
-        this.distanceInKm = distanceInKm;
-        this.status = status;
-        this.bill = bill;
-        this.customer = customer;
-        this.driver = driver;
-    }
 
-    public int getTrimBookingId() {
-        return trimBookingId;
+
+    public int getTripBookingId() {
+        return tripBookingId;
     }
 
     public void setTrimBookingId(int trimBookingId) {
-        this.trimBookingId = trimBookingId;
+        this.tripBookingId = trimBookingId;
     }
 
     public String getFromLocation() {
