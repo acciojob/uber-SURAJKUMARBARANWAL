@@ -83,6 +83,7 @@ public class CustomerServiceImpl implements CustomerService {
 		if(flag==false){
 			throw new Exception("No cab available!");
 		}
+		tripBookingRepository2.save(tripBooking);
 		return  tripBooking;
 
 
@@ -103,7 +104,7 @@ public class CustomerServiceImpl implements CustomerService {
 		driverRepository2.save(driver);
 		customer.getTripBookingList().add(tripBooking);
 		customerRepository2.save(customer);
-
+        tripBookingRepository2.save(tripBooking);
 	}
 
 	@Override
@@ -122,5 +123,6 @@ public class CustomerServiceImpl implements CustomerService {
 		driverRepository2.save(driver);
 		customer.getTripBookingList().add(tripBooking);
 		customerRepository2.save(customer);
+		tripBookingRepository2.save(tripBooking);
 	}
 }
