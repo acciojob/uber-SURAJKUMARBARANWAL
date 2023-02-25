@@ -56,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 		tripBooking.setFromLocation(fromLocation);
 		tripBooking.setToLocation(toLocation);
 		tripBooking.setDistanceInKm(distanceInKm);
-	    tripBooking.setBill(distanceInKm);
+	    tripBooking.setBill(distanceInKm*10);
 		List<Driver> driverList=driverRepository2.findAll();
 		Collections.sort(driverList, new Comparator<Driver>() {
 			@Override
@@ -81,7 +81,7 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 		}
 		if(flag==false){
-			throw new Exception("No value available!");
+			throw new Exception("No cab available!");
 		}
 		return  tripBooking;
 
