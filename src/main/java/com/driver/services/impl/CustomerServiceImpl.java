@@ -70,7 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 		});
 		for(Driver driver1:driverList){
-			if(driver1.getCab().isAvailable()){
+			if(driver1.getCab().getAvailable()==true){
 				flag=true;
 				//setting FK attributes
 				tripBooking.setDriver(driver1);
