@@ -1,6 +1,7 @@
 package com.driver.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,7 +15,7 @@ class Customer{
 
     //parent for TrimBooking
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
-    private List<TripBooking> tripBookingList;
+    private List<TripBooking> tripBookingList=new ArrayList<>();
 
     public Customer() {
     }
