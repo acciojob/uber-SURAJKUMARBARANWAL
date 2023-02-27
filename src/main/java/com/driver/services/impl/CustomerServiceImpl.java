@@ -1,6 +1,7 @@
 package com.driver.services.impl;
 
 import com.driver.model.TripBooking;
+import com.driver.repository.CabRepository;
 import com.driver.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	TripBookingRepository tripBookingRepository2;
+	@Autowired
+	CabRepository cabRepository;
 
 	@Override
 	public void register(Customer customer) {
@@ -63,22 +66,21 @@ public class CustomerServiceImpl implements CustomerService {
 
 		for(Driver driver1:driverList){
 		    if(driver1.getCab().getAvailable()){
-				if(driver==null) driver=driver1;
-				else{
-					if(driver1.getDriverId()<driver.getDriverId()) driver=driver1;
-				}
-			}
+				if(driver==null|| driver1.getDriverId()<driver.getDriverId())
+					driver=driver1;
+			    }
 		}
 		if(driver==null){
-			throw new Exception("No value present");
+			throw new Exception("No cab available!");
 		}
 		driver.getCab().setAvailable(false);
 		tripBooking.setDriver(driver);
+
 		driver.getTripBookingList().add(tripBooking);
-		customer.getTripBookingList().add(tripBooking);
 		driverRepository2.save(driver);
+		customer.getTripBookingList().add(tripBooking);
 		customerRepository2.save(customer);
-		tripBookingRepository2.save(tripBooking);
+
 		return  tripBooking;
 
 
@@ -91,9 +93,10 @@ public class CustomerServiceImpl implements CustomerService {
 		Driver driver=tripBooking.getDriver();
 		Customer customer=tripBooking.getCustomer();
 		driver.getCab().setAvailable(true);
+		cabRepository.save(driver.getCab());
 		//update status
+		tripBooking.setBill(0);
 		tripBooking.setStatus(TripStatus.CANCELED);
-
         tripBookingRepository2.save(tripBooking);
 	}
 
@@ -105,6 +108,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Driver driver=tripBooking.getDriver();
 		Customer customer=tripBooking.getCustomer();
 		driver.getCab().setAvailable(true);
+		cabRepository.save(driver.getCab());
 		//update status
 		tripBooking.setStatus(TripStatus.COMPLETED);
 
