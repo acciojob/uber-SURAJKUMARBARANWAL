@@ -49,7 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
 		//Book the driver with lowest driverId who is free (cab available variable is Boolean.TRUE). If no driver is available, throw "No cab available!" exception
 		//Avoid using SQL query
 		Customer customer=customerRepository2.findById(customerId).get();
-		boolean flag=false;
+		Driver driver=null;
 
 		TripBooking tripBooking=new TripBooking();
 		//set primary trim attributes
@@ -57,32 +57,27 @@ public class CustomerServiceImpl implements CustomerService {
 		tripBooking.setToLocation(toLocation);
 		tripBooking.setDistanceInKm(distanceInKm);
 	    tripBooking.setBill(distanceInKm*10);
+		tripBooking.setStatus(TripStatus.CONFIRMED);
+		tripBooking.setCustomer(customer);
 		List<Driver> driverList=driverRepository2.findAll();
-		Collections.sort(driverList, new Comparator<Driver>() {
-			@Override
-			public int compare(Driver o1, Driver o2) {
 
-				return o1.getDriverId()- o2.getDriverId();
-			}
-		});
 		for(Driver driver1:driverList){
-			if(driver1.getCab().getAvailable()==true){
-				flag=true;
-				//setting FK attributes
-				tripBooking.setDriver(driver1);
-				tripBooking.setCustomer(customer);
-				tripBooking.setStatus(TripStatus.CONFIRMED);
-
-				driver1.getTripBookingList().add(tripBooking);
-				driverRepository2.save(driver1);
-				customer.getTripBookingList().add(tripBooking);
-				customerRepository2.save(customer);
-				break;
+		    if(driver1.getCab().getAvailable()){
+				if(driver==null) driver=driver1;
+				else{
+					if(driver1.getDriverId()<driver.getDriverId()) driver=driver1;
+				}
 			}
 		}
-		if(flag==false){
+		if(driver==null){
 			throw new Exception("No cab available!");
 		}
+		driver.getCab().setAvailable(false);
+		tripBooking.setDriver(driver);
+		driver.getTripBookingList().add(tripBooking);
+		customer.getTripBookingList().add(tripBooking);
+		driverRepository2.save(driver);
+		customerRepository2.save(customer);
 		tripBookingRepository2.save(tripBooking);
 		return  tripBooking;
 
@@ -94,16 +89,11 @@ public class CustomerServiceImpl implements CustomerService {
 		//Cancel the trip having given trip Id and update TripBooking attributes accordingly
 		TripBooking tripBooking=tripBookingRepository2.findById(tripId).get();
 		Driver driver=tripBooking.getDriver();
-		driver.getTripBookingList().remove(tripBooking);
-
 		Customer customer=tripBooking.getCustomer();
-		customer.getTripBookingList().remove(tripBooking);
+		driver.getCab().setAvailable(true);
 		//update status
 		tripBooking.setStatus(TripStatus.CANCELED);
-		driver.getTripBookingList().add(tripBooking);
-		driverRepository2.save(driver);
-		customer.getTripBookingList().add(tripBooking);
-		customerRepository2.save(customer);
+
         tripBookingRepository2.save(tripBooking);
 	}
 
@@ -113,16 +103,11 @@ public class CustomerServiceImpl implements CustomerService {
 
 		TripBooking tripBooking=tripBookingRepository2.findById(tripId).get();
 		Driver driver=tripBooking.getDriver();
-		driver.getTripBookingList().remove(tripBooking);
-
 		Customer customer=tripBooking.getCustomer();
-		customer.getTripBookingList().remove(tripBooking);
+		driver.getCab().setAvailable(true);
 		//update status
 		tripBooking.setStatus(TripStatus.COMPLETED);
-		driver.getTripBookingList().add(tripBooking);
-		driverRepository2.save(driver);
-		customer.getTripBookingList().add(tripBooking);
-		customerRepository2.save(customer);
+
 		tripBookingRepository2.save(tripBooking);
 	}
 }
