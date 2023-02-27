@@ -92,16 +92,5 @@ public class TripBooking{
         this.driver = driver;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TripBooking)) return false;
-        TripBooking that = (TripBooking) o;
-        return getTripBookingId() == that.getTripBookingId();
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getTripBookingId());
-    }
 }
